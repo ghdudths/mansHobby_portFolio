@@ -1,0 +1,148 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  font-family: Arial, sans-serif;
+}
+
+.paymentbar {
+  padding: 20px;
+}
+
+.fixed-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn {
+  padding: 15px 20px;
+  margin: 0 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: white;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+.npay-btn {
+  background-color: #4783bf;
+}
+
+.npay-btn:hover {
+  background-color: #2c66c3;
+}
+
+.simple-buy-btn {
+  background-color: #ffeb00;
+  color: black;
+}
+
+.simple-buy-btn:hover {
+  background-color: #e6d600;
+}
+
+.buy-btn {
+  background-color: #333;
+}
+
+.buy-btn:hover {
+  background-color: #555;
+}
+
+.purchase-section {
+  position: fixed;
+  bottom: -100%;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background-color: white;
+  transition: bottom 0.3s ease;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.purchase-content {
+  padding: 20px;
+}
+
+.purchase-options {
+  margin-top: 20px;
+}
+
+.option {
+  margin-bottom: 15px;
+}
+
+.option label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+.option select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #f9f9f9;
+}
+
+.price {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.purchase-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.purchase-actions .btn {
+  flex: 1;
+  margin: 0 5px;
+}
+
+.purchase-section .close-btn {
+  background-color: #ff6666;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+  display: block;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.purchase-section .close-btn:hover {
+  background-color: #ff4d4d;
+}

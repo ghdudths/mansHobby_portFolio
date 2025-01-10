@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.puter.final_project.dao.GradeMapper">
+
+    <!-- 전체조회 -->
+    <select id="selectList" resultType="grade">
+        select * from grade order by gIdx
+    </select>
+
+    <select id="selectOne" parameterType="int" resultType="grade">
+        select * from gradeAllView where userIdx=#{userIdx}
+    </select>
+
+    <select id="selectGCodition" parameterType="int" resultType="gCondition">
+        select * from GCondition where gIdx = #{gIdx}
+    </select>
+
+</mapper>

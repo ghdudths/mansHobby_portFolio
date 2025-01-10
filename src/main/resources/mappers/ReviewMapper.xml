@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.puter.final_project.dao.ReviewMapper">
+
+  <!-- 전체조회 -->
+  <select id="selectList" resultType="review">
+    select * from ReviewView order by rvIdx desc
+  </select>
+
+  <select id="getReviewInfo" parameterType="int" resultType="review">
+    SELECT * FROM ReviewView WHERE rvIdx = #{rvIdx} order by rvDate
+  </select>
+
+  <select id="getReviewByLike" parameterType="like" resultType="review">
+    SELECT * FROM follow WHERE rvIdx=#{rvIdx} AND userIdx=#{userIdx}
+  </select>
+
+  <!-- 리뷰 작성 -->
+  <insert id="insertReview" parameterType="review">
+  INSERT INTO review
+    VALUES (
+      null, 
+      #{pIdx}, 
+      #{userIdx}, 
+      #{rvContent}, 
+      5, 
+      null,
+      default
+    )
+  </insert>
+
+  <!-- 리뷰 수정 -->
+  <update id="updateReview" parameterType="review">
+    UPDATE review
+    SET 
+      rvContent = #{rvContent}, 
+      reviewPoint = 5, 
+      rvImg = #{rvImg}
+    WHERE 
+      rvIdx = #{rvIdx}
+  </update>
+
+  <!-- 리뷰 삭제 -->
+  <delete id="deleteReview" parameterType="int">
+    DELETE FROM review WHERE rvIdx = #{rvIdx}
+  </delete>
+
+  <!-- 특정 상품에 리뷰 조회 -->
+  <select id="selectReviewsByProduct" parameterType="int" resultType="review">
+    SELECT * FROM ReviewView WHERE pIdx = #{pIdx} order by rvIdx desc
+  </select>
+
+  <!-- 좋아요 추가 -->
+  <insert id="insertLike" parameterType="like">
+    INSERT INTO follow (rfIdx, rvIdx, userIdx)
+    VALUES (null, #{rvIdx}, #{userIdx})
+  </insert>
+
+  <!-- 좋아요 취소 -->
+  <delete id="deleteLike" parameterType="like">
+    DELETE FROM follow where rfIdx = #{rfIdx}
+  </delete>
+
+  <!-- 각 리뷰에 대한 좋아요 수 -->
+  <select id="countLikes" parameterType="int" resultType="int">
+    SELECT COUNT(*) FROM follow WHERE rvIdx = #{rvIdx}
+  </select>
+
+  <!-- 사용자가 해당 리뷰에 좋아요를 눌렀는지 확인 -->
+  <select id="LikedByUser" parameterType="like" resultType="int">
+    SELECT COUNT(*) FROM follow WHERE rvIdx = #{rvIdx} AND userIdx = #{userIdx}
+  </select>
+
+  <!-- 리뷰 삭제 시 해당 리뷰의 좋아요 삭제 -->
+  <delete id="deleteByReview" parameterType="int">
+    DELETE FROM Review WHERE rvIdx = #{rvIdx}
+  </delete>
+
+  <!-- 리뷰 이미지 추가 -->
+  <update id="updateReviewImg" parameterType="map">
+    UPDATE review
+    SET rvImg = #{rvImg}
+    WHERE rvIdx = #{rvIdx}
+  </update>
+
+  <!-- 최근 작성된 리뷰의 rvIdx 가져오기 -->
+  <select id="selectMaxRvIdx" resultType="int">
+      SELECT MAX(rvIdx) FROM review
+  </select>
+  <!-- 사용자가 해당 상품을 구매했는지 확인하는 쿼리 -->
+  <select id="purchasedProduct" resultType="int">
+      SELECT COUNT(*)
+      FROM buyList
+      WHERE userIdx = #{userIdx} 
+      AND pIdx = #{pIdx}
+  </select>
+
+</mapper>

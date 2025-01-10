@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.puter.final_project.dao.BuyListMapper">
+
+    <!-- 부분 조회 -->
+    <select id="selectOne" resultType="user">
+        select * from user where userIdx=#{userIdx}
+    </select>
+
+    <select id="selectOnePrice" parameterType="int" resultType="int">
+        select price from product where pIdx=#{pIdx}
+    </select>
+
+    <!-- 구매내역 -->
+    <insert id="insert" parameterType="buy">
+        insert into buyList values(
+            null,
+            #{userIdx},
+            #{pIdx},
+            #{bamount},
+            now(),
+            #{orderNumber},
+            #{buyPrice},
+            #{daIdx}
+        )
+    </insert>
+
+    <select id="selectBuyListOne" parameterType="buy" resultType="int">
+        select bIdx from BuyList 
+        where userIdx=#{userIdx} and pIdx=#{pIdx}
+        order by buyDate DESC
+        LIMIT 1
+    </select>
+
+    <insert id="orderInsert" parameterType="int">
+        insert into Orders (dsIdx, bIdx, daStartDate, daEndDate) values (
+            (select dsIdx from DStatus where dsType = 'pending'),
+            #{bIdx}, 
+            now(), 
+            DATE_ADD(NOW(), 
+            INTERVAL 2 DAY)
+        )
+    </insert>
+
+    <select id="selectDaAddr" parameterType="int" resultType="String">
+        select daAddr from daddress where daIdx=#{daIdx}
+    </select>
+
+    <select id="selectSubDaAddr" parameterType="int" resultType="String">
+        select subDaAddr from daddress where daIdx=#{daIdx}
+    </select>
+    
+
+    <!-- <update>
+        update buyList set status = 'canceled' where orderNumber = #{orderNumber}
+    </update> -->
+
+    <update id="updateAmount" parameterType="buy">
+        update product set amount = amount - #{bamount} where pIdx = #{pIdx}
+    </update>
+
+    <!-- 사용자가 해당 상품을 구매했는지 확인하는 쿼리 -->
+    <select id="purchasedProduct" resultType="int" parameterType="buy">
+        SELECT COUNT(*)
+        FROM buyList
+        WHERE userIdx = #{userIdx}
+        AND pIdx = #{pIdx}
+    </select>
+
+</mapper>

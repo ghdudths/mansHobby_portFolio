@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.puter.final_project.dao.AdminMapper">
+
+    <!-- 전체조회 -->
+    <select id="selectList" resultType="user">
+       select * from user order by userIdx where name != 'admin'
+    </select>
+
+    <!-- 유저 수정 -->
+    <update id="userUpdate" parameterType="user">
+        update User 
+            set id = #{id},
+            password = #{password},
+            nickName = #{nickName},
+            name = #{name},
+            phone = #{phone},
+            addr = #{addr},
+            subAddr = #{subAddr},
+            adminAt = #{adminAt},
+            point = #{point}
+        where userIdx = #{userIdx};
+    </update>
+
+    <!-- 유저 삭제 -->
+    <delete id="userDelete" parameterType="int">
+        delete from User where userIdx = #{userIdx};
+    </delete>
+
+    <!-- 회원 뷰 전체 조회 -->
+    <select id="selectListUserView" parameterType="Map" resultType="user">
+		select * from UserStatusView where adminAt = 'N'
+    </select>
+
+    <select id="selectUsersById" parameterType="String" resultType="user">
+        SELECT * FROM UserStatusView
+        WHERE adminAt = 'N'
+        AND id LIKE CONCAT('%', #{id}, '%') 
+    </select>
+
+</mapper>

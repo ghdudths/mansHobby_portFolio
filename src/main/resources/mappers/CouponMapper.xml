@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.puter.final_project.dao.CouponMapper">
+
+  <!-- 쿠폰 정보 전체 조회 -->
+  <select id="selectAllCoupons" resultType="coupon">
+    select * from coupon
+  </select>
+
+  <!-- 쿠폰 단일 조회 (cIdx 기준) -->
+  <select id="selectCouponById" parameterType="int" resultType="coupon">
+    SELECT * FROM Coupon WHERE cIdx = #{cIdx}
+  </select>
+
+  <!-- 특정 유저의 쿠폰 조회 (JOIN CouponBox) -->
+  <select id="selectListForUser" parameterType="int" resultType="coupon">
+    SELECT c.cIdx, c.cName, c.discount, c.dcType, cb.useAt
+    FROM Coupon c
+    JOIN CouponBox cb ON c.cIdx = cb.cIdx
+    WHERE cb.userIdx = #{userIdx}
+  </select>
+
+  <!-- 쿠폰 추가 -->
+  <insert id="insertCoupon" parameterType="coupon">
+    INSERT INTO Coupon (cName, discount, dcType)
+    VALUES (#{cName}, #{discount}, #{dcType})
+  </insert>
+
+      <!-- 모든 사용자에게 특정 쿠폰 발급 -->
+    <insert id="insertCouponToAllUsers">
+        INSERT INTO CouponBox (userIdx, cIdx, useAt)
+        SELECT userIdx, #{cIdx}, 'N' FROM User
+    </insert>
+
+</mapper>

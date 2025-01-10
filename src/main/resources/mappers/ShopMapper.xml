@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.puter.final_project.dao.ShopMapper">
+    <!-- 경로와 이름을 통일시킨다 -->
+
+    <!-- 게임카테고리 전체조회 -->
+    <select id="selectListGame" resultType="shop" parameterType="int">
+        select * from shop_list_view where categoryNo = #{categoryNo} order by pIdx desc
+    </select>
+
+    <!-- 스포츠카테고리 전체조회 -->
+    <select id="selectListSports" resultType="product" parameterType="int">
+        select * from productListView where categoryNo = #{categoryNo} order by pIdx desc
+    </select>
+
+    <!-- 게임카테고리 전체조회 -->
+    <select id="selectListGameP" resultType="Long" parameterType="int">
+        select buyPrice from buyList where orderNumber = #{merchantUid}
+    </select>
+
+    <!-- 스포츠카테고리 전체조회 -->
+    <select id="selectListSportsP" resultType="Long" parameterType="int">
+        select buyPrice from buyList where orderNumber = #{merchantUid}
+    </select>
+
+    <!-- 관리자페이지 상품 전체조회 -->
+    <select id="selectAdminList" resultType="shop">
+        select * from shop_list_view order by pIdx desc
+    </select>
+
+
+    <!-- 메인카테고리 번호만 조회 -->
+    <select id="selectCategoryNo" resultType="int" parameterType="String">
+        select categoryNo from category where categoryName = #{categoryName}
+    </select>
+    <!-- dcategoryName 조회 -->
+    <!-- <select id="selectDCategoryNameList" resultType="shop" parameterType="shop">
+        select dcategoryName from shop_list_view where categoryNo = #{categoryNo} and mcategoryName = #{mcategoryName} Group by dcategoryName
+    </select> -->
+    <!--mcategoryName 조회 -->
+    <select id="selectMCategoryNameList" resultType="shop" parameterType="int">
+        select mcategoryName from shop_list_view where categoryNo = #{categoryNo} Group by mcategoryName
+    </select>
+    <!-- mcategoryName을 이용해 mcategoryNo 조회 -->
+    <!-- <select id="selectMCategoryNo" resultType="int" parameterType="shop">
+        select mcategoryNo from shop_list_view where categoryNo = #{categoryNo} and mcategoryName=#{mcategoryName} Group by mcategoryNo
+    </select> -->
+    <!-- mcategoryName을 이용해 mcategoryNo 조회 -->
+    <select id="selectMCategoryNo" resultType="int" parameterType="shop">
+        select mcategoryNo from mcategory where categoryNo = #{categoryNo} and mcategoryName=#{mcategoryName} Group by mcategoryNo
+    </select>
+    <!-- mcategoryNo을 이용해 dcategoryName 검색 -->
+    <select id="selectdCategoryNameList" resultType="shop" parameterType="int">
+        select * from dcategory where mcategoryNo = #{mCategoryNo}
+    </select>
+    <!-- dcategoryNo 검색 -->
+    <!-- <select id="selectDCategoryNo" resultType="int" parameterType="shop">
+        select dcategoryNo from shop_list_view where mcategoryName = #{mcategoryName} and dcategoryName = #{dcategoryName} Group by dcategoryNo
+    </select> -->
+
+    <!-- dcategoryNo 검색 -->
+    <select id="selectDcategoryNo" resultType="int" parameterType="shop">
+        select dcategoryNo from dcategory where mcategoryNo = #{mcategoryNo} and dcategoryName = #{dcategoryName} Group by dcategoryNo
+    </select>
+
+    <!-- dcategoryNo을 이용해 product 검색 -->
+    <select id="selectProductDCategoryList" resultType="product" parameterType="int">
+        select * from productListView where dcategoryNo = #{dCategoryNo} order by pIdx desc
+    </select>
+    <!-- 중카테고리를 이용해 상품검색 -->
+    <select id="selectProductMCategoryList" resultType="product" parameterType="int">
+        select * from productListView where mcategoryNo = #{mCategoryNo} order by pIdx desc
+    </select>
+
+    <!-- 상품 상세 페이지에 띄울 정보 -->
+    <select id="selectProductInfoList" resultType="shop" parameterType="shop">
+        select * from shop_list_view where categoryNo = #{categoryNo} and pIdx=#{pIdx}
+    </select>
+
+    <!-- 수정 시 상품 설명가져오기 -->
+    <select id="selectPEx" resultType="String" parameterType="int">
+        select pEx from shop_list_view where pIdx=#{pIdx}
+    </select>
+
+    <!-- categoryName을 이용해서 categoryNo 얻기 -->
+    <select id="selectAdminCategoryNo" resultType="int" parameterType="shop">
+        select categoryNo from category where categoryName=#{categoryName} Group by categoryNo
+    </select>
+
+    <!-- mcategoryName을 이용해서 mcategoryNo 얻기 -->
+    <select id="selectAdminMcategoryNo" resultType="int" parameterType="shop">
+        select mcategoryNo from shop_list_view where mcategoryName=#{mcategoryName} and categoryName=#{categoryName} Group by mcategoryNo
+    </select>
+
+    <!-- dcategoryName을 이용해서 dcategoryNo 얻기 -->
+    <select id="selectAdminDcategoryNo" resultType="int" parameterType="shop">
+        select dcategoryNo from shop_list_view where dcategoryName=#{dcategoryName} and mcategoryName=#{mcategoryName} and categoryName=#{categoryName} Group by dcategoryNo
+    </select>
+
+    <!-- 상품수정 sql문 -->
+    <update id="productUpdate" parameterType="shop">
+        update product set categoryNo=#{categoryNo}, dcategoryNo=#{dcategoryNo}, mcategoryNo=#{mcategoryNo}, pName=#{pName}, pEx=#{pEx}, amount=#{amount}, price=#{price} where pIdx=#{pIdx}
+    </update>
+
+    <!-- 가장 큰 상품번호만 조회 -->
+    <select id="selectMaxPIdx" resultType="int">
+        select max(pIdx) from product
+    </select>
+
+    <!-- 상품 등록 -->
+    <insert id="productInsert" parameterType="shop">
+        insert into product values( null,
+                                    #{categoryNo},
+                                    #{mcategoryNo},
+                                    #{dcategoryNo},
+                                    #{pName},
+                                    #{pEx},
+                                    #{amount},
+                                    #{price}
+                                  )
+    </insert>
+
+    <!-- 상품사진 등록 -->
+    <insert id="insertPImage" parameterType="pImage">
+        insert into productImage values ( null,
+                                        #{pIdx},
+                                        #{fileName},
+                                        #{fileNameLink}
+                                        )
+    </insert>
+    <!-- 관리자용 상품사진 리스트 조회 -->
+    <!-- <select id="selectAdminPImageList" resultType="pImage" parameterType="int">
+        select * from productImage where pIdx=#{pIdx} order by pIdx desc
+    </select> -->
+
+    <!--상품사진 리스트 조회 -->
+    <select id="selectPImageList" resultType="pImage" parameterType="int">
+        select * from productImage where pIdx=#{pIdx} order by pIdx desc
+    </select>
+    
+    <!-- DB용 상품사진 조회 -->
+    <!-- <select id="selectFileLinkList" resultType="pImage" parameterType="int">
+        select * from productImage where pIdx=#{pIdx} order by pIdx desc
+    </select> -->
+    <!-- DB용 상품사진링크여부 조회 -->
+    <select id="selectFile" resultType="product" parameterType="int">
+        select * from productImage where fileIdx = (select min(fileIdx) from productImage where pIdx=#{pIdx})
+    </select>
+    <!-- 
+    <select id="selectFileIdx" resultType="int" parameterType="int">
+        select min(fileIdx) from productImage where pIdx=#{pIdx}
+    </select> -->
+
+
+
+    <!-- 가장 먼저 보일 사진 조회 -->
+    <select id="selectMaxPImageList" resultType="pImage" parameterType="int">
+        select max(fileIdx) from productImage where pIdx=#{pIdx} order by fileIdx
+    </select>
+
+
+    <!-- 상품정보 삭제시 이미지도 같이 삭제 -->
+    <delete id="pImageDelete" parameterType="int">
+        delete from productImage where pIdx=#{pIdx}
+    </delete>
+
+    <!-- 선택한 상품사진을 삭제 -->
+    <delete id="deletePImageOne" parameterType="int">
+        delete from productImage where fileIdx=#{fileIdx}
+    </delete>
+
+    <!-- 여기부터 상품관리 카테고리 선택기능 ajax처리용 sql문 -->
+    <!-- categoryName 전체조회 -->
+    <select id="selectCategoryNameList" resultType="shop">
+        select categoryName from shop_list_view Group by categoryName
+    </select>
+
+
+    <select id="selectCategoryName" resultType="String" parameterType="int">
+        select categoryName from category where categoryNo=#{categoryNo}
+    </select>
+
+    <!-- categoryName을 이용해 전체mcategoryName조회 -->
+    <select id="selectMcategoryNameList" resultType="shop" parameterType="String">
+        select mcategoryName from shop_list_view where categoryName=#{categoryName} Group by mcategoryName 
+    </select>
+
+    <!-- mcategoryName을 이용해 전체dcategoryName조회 -->
+    <select id="selectDcategoryNameList" resultType="shop" parameterType="String">
+        select dcategoryName from shop_list_view where mcategoryName=#{mcategoryName} Group by dcategoryName 
+    </select>
+    <!-- 여기까지 상품관리 카테고리 선택기능 ajax처리용 sql문 -->
+
+    <!-- 여기부터 상품관리탭 검색기능 -->
+    <!-- 검색어(상품명)만 입력한 경우 -->
+    <select id="selectSearchList" resultType="shop" parameterType="shop">
+        select * from shop_list_view where pName Like CONCAT('%', #{pName}, '%') order by pIdx desc
+    </select>
+
+    <!-- 대분류만 검색한 경우 -->
+    <select id="selectCategoryList" resultType="shop" parameterType="shop">
+        select * from shop_list_view where categoryNo=#{categoryNo} order by pIdx desc
+    </select>
+
+    <!-- 대분류와 검색어(상품명)를 검색한 경우 -->
+    <select id="selectCategorySearchList" resultType="shop" parameterType="shop">
+        select * from shop_list_view where pName Like CONCAT('%', #{pName}, '%') and categoryNo=#{categoryNo} order by pIdx desc
+    </select>
+
+    <!-- 중분류를 검색한 경우 -->
+    <select id="selectMcategoryList" resultType="shop" parameterType="shop">
+        select * from shop_list_view where categoryNo=#{categoryNo} and mcategoryNo=#{mcategoryNo} order by pIdx desc
+    </select>
+
+    <!-- 중분류와 검색어(상품명)를 검색한 경우 -->
+    <select id="selectMcategorySearchList" resultType="shop" parameterType="shop">
+        select * from shop_list_view where pName Like CONCAT('%', #{pName}, '%') and mcategoryNo=#{mcategoryNo} order by pIdx desc
+    </select>
+
+    <!-- 소분류만 검색한 경우 -->
+    <select id="selectDcategoryList" resultType="shop" parameterType="shop">
+        select * from shop_list_view where dcategoryNo=#{dcategoryNo} and mcategoryNo=#{mcategoryNo} and categoryNo=#{categoryNo} order by pIdx desc
+    </select>
+
+    <!-- 소분류와 검색어(상품명)를 검색한 경우 -->
+    <select id="selectDcategorySearchList" resultType="shop" parameterType="shop">
+        select * from shop_list_view where pName Like CONCAT('%', #{pName}, '%') and dcategoryNo=#{dcategoryNo} and mcategoryNo=#{mcategoryNo} and categoryNo=#{categoryNo} order by pIdx desc
+    </select>
+    <!-- 여기까지 상품관리탭 검색기능 -->
+
+    <!-- pIdx로만 상품 정보 조회 mk -->
+    <select id="selectProductInfoListById" resultType="shop" parameterType="int">
+        SELECT * FROM shop_list_view WHERE pIdx = #{pIdx}
+    </select>
+
+    <!-- DB에 추가하는용도의 sql문 -->
+    <select id="DBMcategoryName" resultType="shop" parameterType="int">
+        SELECT mcategoryName FROM mcategory where categoryNo=#{categoryNo}
+    </select>
+
+    <select id="selectProductSearch" resultType="product" parameterType="int">
+        SELECT * FROM productListView where pIdx=#{pIdx}
+    </select>
+
+    <select id="selectDaAddrList" resultType="daddress" parameterType="int">
+        SELECT * FROM daddress where userIdx=#{userIdx}
+    </select>
+    
+
+
+</mapper>

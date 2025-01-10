@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.puter.final_project.dao.CartMapper">
+
+    <!-- 부분 조회 -->
+    <select id="selectMyCart" parameterType="int" resultType="cart">
+        select * from CartView where userIdx=#{userIdx}
+    </select>
+
+    <select id="selectPIdx" parameterType="int" resultType="cart">
+        select pIdx from CartView where userIdx=#{userIdx}
+    </select>
+    
+
+    <!-- 구매내역 -->
+    <insert id="cartInsert" parameterType="cart">
+        insert into scart values(
+            null,
+            #{userIdx},
+            #{pIdx},
+            #{scamount}
+        )
+    </insert>
+
+    <update id="updateQuantity">
+        update scart
+        set scamount = #{scamount}
+        where scIdx = #{scIdx}
+    </update>
+
+    <delete id="cartDelete" parameterType="int">
+        delete from scart
+        where scIdx = #{scIdx}
+    </delete>
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.puter.final_project.dao.UserActivityMapper">
+
+  <!-- 구매 시 전체구매량 추가 -->
+  <update id="updateTotalBuyPlus" parameterType="userActivity">
+    UPDATE UserActivity
+    SET totalPurchaseAmount = totalPurchaseAmount + #{totalPurchaseAmount}, lastUpdated = NOW()
+    WHERE userIdx = #{userIdx}
+  </update>
+
+  <!-- 환불 시 전체구매량 제거 -->
+  <update id="updateTotalBuyMinus" parameterType="userActivity">
+    UPDATE UserActivity
+    SET totalPurchaseAmount = totalPurchaseAmount - #{totalBuy}, lastUpdated = NOW()
+    WHERE userIdx = #{userIdx}
+  </update>
+
+  <!-- 리뷰 작성 시 리뷰카운트 + 1 -->
+  <update id="updateTotalReviewPlus" parameterType="int">
+    UPDATE UserActivity
+    SET totalReviewCount = totalReviewCount + 1, lastUpdated = NOW()
+    WHERE userIdx = #{userIdx}
+  </update>
+
+    <!-- 리뷰 삭제 시 리뷰카운트 - 1 -->
+  <update id="updateTotalReviewMinus" parameterType="int">
+    UPDATE UserActivity
+    SET totalReviewCount = totalReviewCount - 1, lastUpdated = NOW()
+    WHERE userIdx = #{userIdx}
+  </update>
+
+  <update id="callUpdateUserGrade" parameterType="int">
+    CALL UpdateUserGrade(#{userIdx})
+  </update>
+
+</mapper>

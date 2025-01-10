@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.puter.final_project.dao.UserMapper">
+
+  <!-- 전체조회 -->
+  <select id="selectList" resultType="user">
+    select * from user order by userIdx
+  </select>
+
+  <!-- 상세 조회 id -->
+  <select id="selectOneFromId" parameterType="String" resultType="user">
+		select * from LoginUserView where id=#{ id }
+  </select>
+
+  <!-- 상세 조회 email -->
+  <select id="selectOneFromEmail" parameterType="Map" resultType="user">
+		select * from UserStatusView where email=#{email} and esite=#{esite}
+  </select>
+
+  <!-- 사용자 추가 -->
+  <insert id="insert" parameterType="user">
+    insert into user values(
+      null,
+      default,
+      #{id},
+      #{password},
+      #{nickName}, 
+      #{name},
+      #{phone},
+      #{addr},
+      #{subAddr},
+      default,
+      0,
+      default
+    )
+  </insert>
+
+  <!-- 이메일 추가 -->
+  <insert id="emailInsert" parameterType="user">
+    insert into email values(
+      null,
+      #{userIdx},
+      #{email},
+      #{esite}
+    )
+  </insert>
+
+  <update id="userModify" parameterType="user">
+    update user set
+      nickName = #{nickName}, 
+      name = #{name}, 
+      phone = #{phone},
+      addr = #{addr},
+      subAddr = #{subAddr}
+    where 
+      userIdx = #{userIdx}
+  </update>
+
+  <!--아래부터 비밀번호 찾기 -->
+  <!-- 유저번호조회 -->
+  <select id="selectNameIdUserIdx" parameterType="user" resultType="Integer">
+		select userIdx from User where name=#{name} and id=#{id}
+  </select>
+  <!-- 유저번호를 토대로 이메일리스트 조회 -->
+  <select id="selectEmailList" parameterType="user" resultType="user">
+		select email from Email where userIdx=#{userIdx}
+  </select>
+  <!-- 이메일로 유저번호 조회 -->
+  <select id="selectEmailUserIdx" parameterType="user" resultType="int">
+		select userIdx from Email where email=#{email}
+  </select>
+  <!-- 유저 아이디 조회 -->
+  <select id="selectId" parameterType="user" resultType="String">
+		select id from UserStatusView where email=#{email} and userIdx=#{userIdx}
+  </select>
+  <!-- 유저 비밀번호 조회 -->
+  <select id="selectPwd" parameterType="user" resultType="String">
+		select password from User where id=#{id}
+  </select>
+</mapper>

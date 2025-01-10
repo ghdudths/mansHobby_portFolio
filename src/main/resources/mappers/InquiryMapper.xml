@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.puter.final_project.dao.InquiryMapper">
+
+  <!-- 전체조회 -->
+  <select id="selectList" resultType="inquiry">
+       select * from inquiry order by inIdx
+  </select>
+
+  <!-- 상세조회 -->
+  <select id="selectOne" parameterType="int" resultType="inquiry">
+       select * from InquiryView where inIdx=#{inIdx}
+  </select>
+
+  <select id="selectOneP" parameterType="Integer" resultType="inquiry">
+       select * from product where pIdx=#{pIdx}
+  </select>
+
+  <!-- 게시글 작성 -->
+  <insert id="inquiryInsert" parameterType="inquiry">
+    <!-- 나중에 수정 필요 -->
+    insert into inquiry values(
+      null,
+      #{pIdx}, 
+      #{userIdx}, 
+      #{inType}, 
+      #{inContent}, 
+      now(), 
+      #{inPP},
+      'N'
+      )
+  </insert>
+
+  <!-- 게시글 삭제 -->
+  <delete id="delete" parameterType="int">
+    delete from inquiry where inIdx=#{inIdx}
+  </delete>
+
+  <!-- 게시글 수정 -->
+  <update id="update" parameterType="inquiry">
+    update inquiry set inType=#{inType}, inContent=#{inContent}, inPP=#{inPP} where inIdx=#{inIdx}
+  </update>
+
+  <!-- 검색조건별 조회 -->
+  <select id="selectByCondition" parameterType="Map" resultType="inquiry">
+    select * from InquiryView
+    <trim prefix="where" prefixOverrides="or">
+      <if test="id != null">
+            id like CONCAT('%', #{id}, '%')
+      </if>
+      <if test="inType != null">
+            or inType like CONCAT('%', #{inType}, '%')
+      </if>
+    </trim>
+  </select>
+
+  <select id="inquiryAList" resultType="answer">
+		select * from AnswerView where adminAt = 'Y'
+  </select>
+
+  <select id="selectNoticeList" resultType="inquiry">
+    select * from inquiry where inAc = 'Y'
+  </select>
+
+  <insert id="nInsert" parameterType="inquiry">
+    insert into inquiry values(null, null, #{userIdx}, #{inType}, #{inContent}, default, null, 'Y')
+  </insert>
+
+  <update id="nModify" parameterType="inquiry">
+    update inquiry set inType=#{inType}, inContent=#{inContent} where inIdx=#{inIdx}
+  </update>
+
+  <delete id="nDelete" parameterType="int">
+    delete from inquiry where inIdx=#{inIdx}
+  </delete>
+
+</mapper>
